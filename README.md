@@ -9,7 +9,7 @@
 5. Enter your Github credentials, when prompted by the terminal
 6. When finished the script will open your project in VS Code if you have it installed
 
-### deploy.sh script
+### Post setup - Updating Github Pages using the deploy.sh script
 
 The script builds a deploy.sh script in your VueJS project directory. After you have built content in your VueJS project and want to update the Github Pages simply run:
 
