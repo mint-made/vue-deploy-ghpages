@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# dispaly important information to the user
+# display important information to the user
 echo "A new Vue project will be created and deployed to your Github Pages."
 echo "Before proceeding, create a new Github repository for the project."
 echo
