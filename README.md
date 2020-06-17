@@ -1,5 +1,8 @@
 ## Shell Script Automation to Create and Deploy VueJS projects to Github Pages
 
+### Requirements
+- Vue CLI
+
 ### Project Setup
 
 1. Clone the project and make the script exectuable
