@@ -1,4 +1,4 @@
-## Create and Deploy VueJS projects hosted on Github Pages
+## Shell Script Automation to Create and Deploy VueJS projects to Github Pages
 
 ### Project Setup
 
