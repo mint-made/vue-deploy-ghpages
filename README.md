@@ -17,4 +17,4 @@ The script builds a deploy.sh script in your VueJS project directory. After you 
 ./deploy.sh
 ```
 
-This will build your project into the /dist/ folder and the files within this directory are pushed to the gh-pages branch of your VueJS project on Github, updating your Github Pages site.
+This will build your project into the /dist/ folder and the files within this directory are pushed to the gh-pages branch of your VueJS project on Github, updating your Github Page site.
