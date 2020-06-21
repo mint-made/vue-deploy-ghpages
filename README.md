@@ -1,5 +1,5 @@
 ## Shell Script Automation to Create and Deploy VueJS projects to Github Pages
-This project is a shell script to automate the creation and deployment of a new VueJS project, with the project automatically hosted on Github Pages.
+A shell script to automate the creation and deployment of a new VueJS project, with the project automatically hosted on Github Pages.
 
 ### Requirements
 - Vue CLI
