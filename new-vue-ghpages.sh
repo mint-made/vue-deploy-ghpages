@@ -11,11 +11,22 @@ read -p "Github Repository Name: " varName
 # let the user input their github name
 read -p "Github Account Name(for project to be hosted): " varGithubAccount
 
+# check if site is being hosted in the github root <username>/github.io or a repo <username>/github.io/<repo>
+varURL="${varGithubAccount}.github.io"
+if [[ ${varName} == ${varURL} ]]; then
+  varLocation="root"
+elif [[ ${varName} != ${varURL} ]]; then
+  varLocation="repo"
+fi
+
+echo ${varLocation}
+exit N
+
 # create the project using the vue/cli
 vue create $varName
 cd $varName
 
-# create a vue.config.js file and add a public path as the project name
+# create a vue.config.js file and add a public path as the project name *not needed on github root
 echo "module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
     ? '/${varName}/'
@@ -34,17 +45,17 @@ npm run build
 # navigate into the build output directory
 cd dist
 
-# if you are deploying to a custom domain
+# if you are deploying to a custom domain uncomment the following line:
 # echo 'www.example.com' > CNAME
 
 git init
 git add -A
 git commit -m 'deploy'
 
-# if you are deploying to https://<USERNAME>.github.io
-# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
+# if you are deploying to https://<USERNAME>.github.io uncomment the following line
+# git push -f https://github.com/${varGithubAccount}/${varName}.git master
 
-# if you are deploying to https://<USERNAME>.github.io/<REPO>
+# if you are deploying to https://<USERNAME>.github.io/<REPO> uncomment the following line
 git push -f https://github.com/${varGithubAccount}/${varName}.git master:gh-pages
 
 cd -" >> deploy.sh
