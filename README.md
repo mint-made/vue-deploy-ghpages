@@ -13,7 +13,7 @@ A shell script to automate the creation and deployment of a new VueJS project, w
 
 - Creates your vue project using the vue-cli setup
 - Creates a vue.config.js file with a public path matching your project name if you are hosting at https://*USERNAME*.github.io/*REPO*
-- Creates a deploy.sh script that builds your distribution files, with different commands depending on how you are hosting; with a custom domain, at https://*USERNAME*.github.io/ or at https://*USERNAME*.github.io/*REPO*
+- Creates a deploy.sh script, with different commands depending on how you are hosting; with a custom domain, at https://*USERNAME*.github.io/ or at https://*USERNAME*.github.io/*REPO*. The script builds the distribution files and pushes them to the right branch of the repo that is hosted.
 - Edits the project README.md to included the script.sh description and also add a link to the hosted project
 
 ### Project Setup
