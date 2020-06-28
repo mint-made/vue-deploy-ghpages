@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # display important information to the user
 echo "A new Vue project will be created and deployed to your Github Pages."
@@ -11,30 +11,51 @@ read -p "Github Repository Name: " varName
 # let the user input their github name
 read -p "Github Account Name(for project to be hosted): " varGithubAccount
 
-# check if site is being hosted in the github root <username>/github.io or a repo <username>/github.io/<repo>
-varURL="${varGithubAccount}.github.io"
-if [[ ${varName} == ${varURL} ]]; then
-  varLocation="root"
-elif [[ ${varName} != ${varURL} ]]; then
-  varLocation="repo"
-fi
+# check hosting location: <username>/github.io | <username>/github.io/<repo> | custom URL
 
-echo ${varLocation}
-exit N
+if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
+  read -p "Are you deploying the site to a custom domain (y/n)? " varYNCustomDomain
+  if [[ "$varYNCustomDomain" == "y" ]]; then
+    read -p "What is your custom domain? " varCustomDomain
+  fi
+fi
 
 # create the project using the vue/cli
 vue create $varName
 cd $varName
 
-# create a vue.config.js file and add a public path as the project name *not needed on github root
-echo "module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/${varName}/'
-    : '/'
-}" >> vue.config.js
+# create a vue.config.js file and add a public path *not needed on github root / custom URL
+if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
+  echo "module.exports = {
+    publicPath: process.env.NODE_ENV === 'production'
+      ? '/${varName}/'
+      : '/'
+  }" >> vue.config.js
+fi
 
 # create a shell script to build the vue /dist files and deploy them to gh-pages branch to be hosted online
-echo "#!/usr/bin/env sh
+echo "# to find out more or troubleshoot vue project deployment, please visit: https://cli.vuejs.org/guide/deployment.html#github-pages
+cd -" >> deploy.sh
+## if you are deploying to https://<USERNAME>.github.io/<REPO>
+if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
+  echo "# deploying to https://<USERNAME>.github.io/<REPO>
+  git push -f https://github.com/${varGithubAccount}/${varName}.git master:gh-pages" >> deploy.sh
+fi
+## if you are deploying to https://<USERNAME>.github.io
+if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
+  echo "# deploying to https://<USERNAME>.github.io
+  git push -f https://github.com/${varGithubAccount}/${varName}.git deployment" >> deploy.sh
+fi
+echo "git init
+git add -A
+git commit -m 'deploy'
+" >> deploy.sh
+## if you are deploying to a custom domain
+if [[ "$varYNCustomDomain" == "y" ]]; then
+  echo "# deploying to a custom domain
+  echo '${varCustomDomain}' > CNAME"
+fi
+echo "echo #!/usr/bin/env sh
 
 # abort on errors
 set -e
@@ -44,21 +65,7 @@ npm run build
 
 # navigate into the build output directory
 cd dist
-
-# if you are deploying to a custom domain uncomment the following line:
-# echo 'www.example.com' > CNAME
-
-git init
-git add -A
-git commit -m 'deploy'
-
-# if you are deploying to https://<USERNAME>.github.io uncomment the following line
-# git push -f https://github.com/${varGithubAccount}/${varName}.git master
-
-# if you are deploying to https://<USERNAME>.github.io/<REPO> uncomment the following line
-git push -f https://github.com/${varGithubAccount}/${varName}.git master:gh-pages
-
-cd -" >> deploy.sh
+" >> deploy.sh
 
 # add executable permissions to the deploy.sh file
 chmod +x deploy.sh
@@ -83,4 +90,3 @@ git push -u origin master
 
 # open the project in vs code
 code .
-
