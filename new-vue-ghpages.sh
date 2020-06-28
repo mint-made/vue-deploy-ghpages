@@ -34,28 +34,7 @@ if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
 fi
 
 # create a shell script to build the vue /dist files and deploy them to gh-pages branch to be hosted online
-echo "# to find out more or troubleshoot vue project deployment, please visit: https://cli.vuejs.org/guide/deployment.html#github-pages
-cd -" >> deploy.sh
-## if you are deploying to https://<USERNAME>.github.io/<REPO>
-if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
-  echo "# deploying to https://<USERNAME>.github.io/<REPO>
-  git push -f https://github.com/${varGithubAccount}/${varName}.git master:gh-pages" >> deploy.sh
-fi
-## if you are deploying to https://<USERNAME>.github.io
-if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
-  echo "# deploying to https://<USERNAME>.github.io
-  git push -f https://github.com/${varGithubAccount}/${varName}.git deployment" >> deploy.sh
-fi
-echo "git init
-git add -A
-git commit -m 'deploy'
-" >> deploy.sh
-## if you are deploying to a custom domain
-if [[ "$varYNCustomDomain" == "y" ]]; then
-  echo "# deploying to a custom domain
-  echo '${varCustomDomain}' > CNAME"
-fi
-echo "echo #!/usr/bin/env sh
+echo "#!/usr/bin/env sh
 
 # abort on errors
 set -e
@@ -66,17 +45,52 @@ npm run build
 # navigate into the build output directory
 cd dist
 " >> deploy.sh
+## if you are deploying to a custom domain
+if [[ "$varYNCustomDomain" == "y" ]]; then
+  echo "# deploying to a custom domain
+echo '${varCustomDomain}' >> CNAME
+" >> deploy.sh
+fi
+echo "git init
+git add -A
+git commit -m 'deploy'
+" >> deploy.sh
+## if you are deploying to https://<USERNAME>.github.io
+if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
+  echo "# deploying to https://<USERNAME>.github.io
+git push -f https://github.com/${varGithubAccount}/${varName}.git deployment
+" >> deploy.sh
+fi
+## if you are deploying to https://<USERNAME>.github.io/<REPO>
+if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
+  echo "# deploying to https://<USERNAME>.github.io/<REPO>
+git push -f https://github.com/${varGithubAccount}/${varName}.git master:gh-pages
+" >> deploy.sh
+fi
+echo "cd -
+
+# Vue project deployment information can be found at: https://cli.vuejs.org/guide/deployment.html#github-pages" >> deploy.sh
 
 # add executable permissions to the deploy.sh file
 chmod +x deploy.sh
 
 # add information to the README.md file about how to run the command and the URL of where the project is hosted
+if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
 sed -i "22i\This project can be found at: https://${varGithubAccount}.github.io/${varName}" README.md
+fi
+if [[ "$varName" == "${varGithubAccount}.github.io" && "$varYNCustomDomain" != "y" ]]; then
+sed -i "22i\This project can be found at: https://${varGithubAccount}.github.io/" README.md
+fi
+if [[ "$varName" == "${varGithubAccount}.github.io" && "$varYNCustomDomain" == "y" ]]; then
+sed -i "22i\This project can be found at: https://$varCustomDomain" README.md
+fi
 sed -i '22i\### Github Pages' README.md
+sed -i "22i\" README.md
 sed -i '22i\```' README.md
 sed -i "22i\./deploy.sh" README.md
 sed -i '22i\```' README.md
 sed -i "22i\### Builds and deploys the project to Github Pages" README.md
+sed -i "22i\" README.md
 
 # init, commit and push development files to master branch
 git init
