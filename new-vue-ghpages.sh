@@ -11,13 +11,10 @@ read -p "Github Repository Name: " varName
 # let the user input their github name
 read -p "Github Account Name(for project to be hosted): " varGithubAccount
 
-# check hosting location: <username>/github.io | <username>/github.io/<repo> | custom URL
-
-if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
-  read -p "Are you deploying the site to a custom domain (y/n)? " varYNCustomDomain
-  if [[ "$varYNCustomDomain" == "y" ]]; then
-    read -p "What is your custom domain? " varCustomDomain
-  fi
+# does the user want to host the project with a custom domain?
+read -p "Are you deploying the site to a custom domain (y/n)? " varYNCustomDomain
+if [[ "$varYNCustomDomain" == "y" ]]; then
+  read -p "What is your custom domain? " varCustomDomain
 fi
 
 # create the project using the vue/cli
@@ -58,7 +55,7 @@ git commit -m 'deploy'
 ## if you are deploying to https://<USERNAME>.github.io
 if [[ "$varName" == "${varGithubAccount}.github.io" ]]; then
   echo "# deploying to https://<USERNAME>.github.io
-git push -f https://github.com/${varGithubAccount}/${varName}.git deployment
+git push -f https://github.com/${varGithubAccount}/${varName}.git master
 " >> deploy.sh
 fi
 ## if you are deploying to https://<USERNAME>.github.io/<REPO>
@@ -75,29 +72,29 @@ echo "cd -
 chmod +x deploy.sh
 
 # add information to the README.md file about how to run the command and the URL of where the project is hosted
-if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
+if [[ "$varName" != "${varGithubAccount}.github.io" && "$varYNCustomDomain" != "y" ]]; then
 sed -i "22i\This project can be found at: https://${varGithubAccount}.github.io/${varName}" README.md
 fi
 if [[ "$varName" == "${varGithubAccount}.github.io" && "$varYNCustomDomain" != "y" ]]; then
 sed -i "22i\This project can be found at: https://${varGithubAccount}.github.io/" README.md
 fi
-if [[ "$varName" == "${varGithubAccount}.github.io" && "$varYNCustomDomain" == "y" ]]; then
+if [[ "$varYNCustomDomain" == "y" ]]; then
 sed -i "22i\This project can be found at: https://$varCustomDomain" README.md
 fi
 sed -i '22i\### Github Pages' README.md
-sed -i "22i\" README.md
 sed -i '22i\```' README.md
 sed -i "22i\./deploy.sh" README.md
 sed -i '22i\```' README.md
 sed -i "22i\### Builds and deploys the project to Github Pages" README.md
-sed -i "22i\" README.md
 
-# init, commit and push development files to master branch
-git init
-git add .
-git commit -m "first commit"
-git remote add origin https://github.com/mint-made/${varName}.git
-git push -u origin master
+# *https://<USERNAME>.github.io/<REPO> only: init, commit and push development files to master branch
+if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
+  git init
+  git add .
+  git commit -m "first commit"
+  git remote add origin https://github.com/mint-made/${varName}.git
+  git push -u origin master
+fi
 
 # run deploy.sh script to build and then delpoy files to github pages
 ./deploy.sh
