@@ -79,7 +79,7 @@ if [[ "$varName" == "${varGithubAccount}.github.io" && "$varYNCustomDomain" != "
 sed -i "22i\This project can be found at: https://${varGithubAccount}.github.io/" README.md
 fi
 if [[ "$varYNCustomDomain" == "y" ]]; then
-sed -i "22i\This project can be found at: https://$varCustomDomain" README.md
+sed -i "22i\This project can be found at: https://${varCustomDomain}" README.md
 fi
 sed -i '22i\### Github Pages' README.md
 sed -i '22i\```' README.md
@@ -92,7 +92,7 @@ if [[ "$varName" != "${varGithubAccount}.github.io" ]]; then
   git init
   git add .
   git commit -m "first commit"
-  git remote add origin https://github.com/mint-made/${varName}.git
+  git remote add origin https://github.com/${varGithubAccount}/${varName}.git
   git push -u origin master
 fi
 
