@@ -8,6 +8,7 @@ A shell script to automate the creation and deployment of a new VueJS project, w
 
 - vue-cli
 - node/npm
+- git
 
 ### What the script does
 
