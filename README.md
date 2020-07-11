@@ -6,6 +6,7 @@ A shell script to automate the creation and deployment of a new VueJS project, w
 
 ### Requirements
 
+- Ubuntu based system (macOS support coming soon)
 - vue-cli
 - node/npm
 - git
