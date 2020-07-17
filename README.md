@@ -24,7 +24,7 @@ A shell script to automate the creation and deployment of a new VueJS project, w
 2. Create a new Github remote repository for your project
 3. Run the script in the directory you want to create your new project and follow the instructions in the terminal
 
-### Post setup - Updating Github Pages using the deploy.sh script
+### Post setup - Updating changes to Github Pages using the deploy.sh script
 
 The script builds a deploy.sh script in your VueJS project directory. After you have built content in your VueJS project and want to deploy the changes to your gh-pages, in the terminal run:
 
